@@ -1,5 +1,5 @@
 #!/bin/bash
-# Stock kernel for LG G5 build script by jcadduono
+# Kali NetHunter kernel for LG G5 build script by jcadduono
 
 ################### BEFORE STARTING ################
 #
@@ -61,7 +61,7 @@ THREADS=5
 export ARCH=arm64
 export CROSS_COMPILE=$TOOLCHAIN/bin/aarch64-linux-gnu-
 
-[ "$TARGET" ] || TARGET=stock
+[ "$TARGET" ] || TARGET=nethunter
 [ "$1" ] && {
 	VARIANT=$1
 } || {

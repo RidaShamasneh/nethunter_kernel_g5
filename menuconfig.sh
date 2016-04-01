@@ -10,7 +10,7 @@ TOOLCHAIN=$HOME/build/toolchain/gcc-linaro-arm64-5.3
 export ARCH=arm64
 export CROSS_COMPILE=$TOOLCHAIN/bin/aarch64-linux-gnu-
 
-[ "$TARGET" ] || TARGET=stock
+[ "$TARGET" ] || TARGET=nethunter
 DEFCONFIG=${TARGET}_defconfig
 DEFCONFIG_FILE=$RDIR/arch/$ARCH/configs/$DEFCONFIG
 
