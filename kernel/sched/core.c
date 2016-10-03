@@ -4268,8 +4268,8 @@ fire_sched_out_preempt_notifiers(struct task_struct *curr,
 
 #define APP_SETTING_BIT 30
 
-extern void set_app_setting_bit(uint32_t bit);
-extern void clear_app_setting_bit(uint32_t bit);
+extern void set_app_setting_bit(uint32_t bit){}
+extern void clear_app_setting_bit(uint32_t bit){}
 
 /**
  * prepare_task_switch - prepare to switch tasks

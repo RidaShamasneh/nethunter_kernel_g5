@@ -257,6 +257,9 @@ ENTRY(arm926_flush_kern_dcache_area)
  *
  * (same as v4wb)
  */
+ENTRY(arm926_dma_inv_range)
+ENDPROC(arm926_dma_inv_range)
+
 arm926_dma_inv_range:
 #ifndef CONFIG_CPU_DCACHE_WRITETHROUGH
 	tst	r0, #CACHE_DLINESIZE - 1
@@ -271,6 +274,10 @@ arm926_dma_inv_range:
 	blo	1b
 	mcr	p15, 0, r0, c7, c10, 4		@ drain WB
 	ret	lr
+
+ENTRY(arm926_dma_clean_range)
+ENDPROC(arm926_dma_clean_range)
+
 
 /*
  *	dma_clean_range(start, end)
