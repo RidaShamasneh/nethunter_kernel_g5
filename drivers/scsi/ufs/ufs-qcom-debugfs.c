@@ -79,7 +79,7 @@ static int ufs_qcom_dbg_testbus_en_set(void *data, u64 attr_id)
 	else
 		host->dbg_print_en &= ~UFS_QCOM_DBG_PRINT_TEST_BUS_EN;
 
-	return ufs_qcom_testbus_config(host);
+	return 0;//ufs_qcom_testbus_config(host);
 }
 
 DEFINE_SIMPLE_ATTRIBUTE(ufs_qcom_dbg_testbus_en_ops,
@@ -145,7 +145,7 @@ static ssize_t ufs_qcom_dbg_testbus_cfg_write(struct file *file,
 	 * Sanity check of the {major, minor} tuple is done in the
 	 * config function
 	 */
-	ret = ufs_qcom_testbus_config(host);
+	ret = 0;//ufs_qcom_testbus_config(host);
 	if (!ret)
 		dev_dbg(host->hba->dev,
 				"%s: New configuration: major=%d, minor=%d\n",
@@ -199,7 +199,7 @@ static int ufs_qcom_dbg_dbg_regs_show(struct seq_file *file, void *data)
 
 	/* Temporarily override the debug print enable */
 	host->dbg_print_en |= UFS_QCOM_DBG_PRINT_REGS_EN;
-	ufs_qcom_print_hw_debug_reg_all(host->hba, file, ufsdbg_pr_buf_to_std);
+	//ufs_qcom_print_hw_debug_reg_all(host->hba, file, ufsdbg_pr_buf_to_std);
 	/* Restore previous debug print enable value */
 	if (!dbg_print_reg)
 		host->dbg_print_en &= ~UFS_QCOM_DBG_PRINT_REGS_EN;
