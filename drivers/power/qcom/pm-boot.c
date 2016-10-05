@@ -47,6 +47,12 @@ static int msm_pm_tz_boot_init(void)
 		return scm_set_boot_addr(virt_to_phys(msm_pm_boot_entry), flag);
 	}
 }
+
+void arch_idle(void)
+{
+	return;
+}
+
 static void msm_pm_write_boot_vector(unsigned int cpu, unsigned long address)
 {
 	uint32_t clust_id = MPIDR_AFFINITY_LEVEL(cpu_logical_map(cpu), 1);
@@ -57,9 +63,9 @@ static void msm_pm_write_boot_vector(unsigned int cpu, unsigned long address)
 	if (clust_id >= MAX_NUM_CLUSTER || cpu_id >= MAX_CPUS_PER_CLUSTER)
 		BUG();
 
-	msm_pm_boot_vector[CPU_INDEX(clust_id, cpu_id)] = address;
-	start_address = &msm_pm_boot_vector[CPU_INDEX(clust_id, cpu_id)];
-	end_address = &msm_pm_boot_vector[CPU_INDEX(clust_id, cpu_id + 1)];
+	//msm_pm_boot_vector[CPU_INDEX(clust_id, cpu_id)] = address;
+	//start_address = &msm_pm_boot_vector[CPU_INDEX(clust_id, cpu_id)];
+	//end_address = &msm_pm_boot_vector[CPU_INDEX(clust_id, cpu_id + 1)];
 	dmac_clean_range((void *)start_address, (void *)end_address);
 }
 

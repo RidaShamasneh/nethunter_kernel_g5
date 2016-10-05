@@ -801,7 +801,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
 			 * follow the loader, and is not movable.  */
 			load_bias = ELF_ET_DYN_BASE - vaddr;
 			if (current->flags & PF_RANDOMIZE)
-				load_bias += arch_mmap_rnd();
+				load_bias += mmap_rnd();
 			load_bias = ELF_PAGESTART(load_bias);
 			total_size = total_mapping_size(elf_phdata,
 							loc->elf_ex.e_phnum);

@@ -1578,7 +1578,7 @@ static void binder_transaction(struct binder_proc *proc,
 		binder_inc_node(target_node, 1, 0, NULL);
 
 	if(t == NULL || t->buffer == NULL) {
-		u32 val;
+		/*u32 val;
 		asm volatile("isb\n");
 		asm volatile("mrs %0, S3_2_C15_C15_0" : "=r" (val));
 		val |= (0x3 << 11);
@@ -1586,7 +1586,7 @@ static void binder_transaction(struct binder_proc *proc,
 		asm volatile("isb\n");
 		asm volatile("mrs %0, S3_2_C15_C15_0" : "=r" (val));
 
-		BUG();
+		BUG();*/
 	}
 
 	offp = (binder_size_t *)(t->buffer->data +

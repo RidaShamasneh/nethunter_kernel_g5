@@ -1286,7 +1286,9 @@ static inline int mlock_future_check(struct mm_struct *mm,
  */
 
 extern void set_app_setting_bit(uint32_t bit);
+char *lib_names[];
 extern char *lib_names[];
+unsigned int lib_name_entries=0;
 extern unsigned int lib_name_entries;
 
 unsigned long do_mmap_pgoff(struct file *file, unsigned long addr,
