@@ -7483,7 +7483,8 @@ static int ufshcd_disable_clocks_skip_ref_clk(struct ufs_hba *hba,
 	return  ufshcd_setup_clocks(hba, false, true, is_gating_context);
 }
 
-static int ufshcd_init_clocks(struct ufs_hba *hba)
+
+static int __attribute__((optimize("O0"))) ufshcd_init_clocks(struct ufs_hba *hba)
 {
 	int ret = 0;
 	struct ufs_clk_info *clki;
@@ -7558,7 +7559,7 @@ static void ufshcd_variant_hba_exit(struct ufs_hba *hba)
 	ufshcd_vops_exit(hba);
 }
 
-static int ufshcd_hba_init(struct ufs_hba *hba)
+static int __attribute__((optimize("O0"))) ufshcd_hba_init(struct ufs_hba *hba)
 {
 	int err;
 
@@ -7577,14 +7578,16 @@ static int ufshcd_hba_init(struct ufs_hba *hba)
 	if (err)
 		goto out;
 
+	/*
 	err = ufshcd_init_clocks(hba);
 	if (err)
 		goto out_disable_hba_vreg;
+	
 
 	err = ufshcd_enable_clocks(hba);
 	if (err)
 		goto out_disable_hba_vreg;
-
+	*/
 	err = ufshcd_init_vreg(hba);
 	if (err)
 		goto out_disable_clks;
@@ -8939,7 +8942,7 @@ static void ufshcd_init_lanes_per_dir(struct ufs_hba *hba)
  * @irq: Interrupt line of device
  * Returns 0 on success, non-zero value on failure
  */
-int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
+int __attribute__((optimize("O0"))) ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
 {
 	int err;
 	struct Scsi_Host *host = hba->host;
@@ -9070,9 +9073,9 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
 	err = ufshcd_hba_enable(hba);
 	if (err) {
 		dev_err(hba->dev, "Host controller enable failed\n");
-		ufshcd_print_host_regs(hba);
+		/*ufshcd_print_host_regs(hba);
 		ufshcd_print_host_state(hba);
-		goto out_remove_scsi_host;
+		goto out_remove_scsi_host;*/
 	}
 
 	if (ufshcd_is_clkscaling_supported(hba)) {

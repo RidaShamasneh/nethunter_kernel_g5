@@ -295,7 +295,7 @@ static void ufshcd_pltfrm_shutdown(struct platform_device *pdev)
  *
  * Returns 0 on success, non-zero value on failure
  */
-static int ufshcd_pltfrm_probe(struct platform_device *pdev)
+static int __attribute__((optimize("O0"))) ufshcd_pltfrm_probe(struct platform_device *pdev)
 {
 	struct ufs_hba *hba;
 	void __iomem *mmio_base;
@@ -336,8 +336,8 @@ static int ufshcd_pltfrm_probe(struct platform_device *pdev)
 		if (!ufs_variant_node) {
 			dev_dbg(&pdev->dev, "no ufs_variant_node found\n");
 		} else {
-			ufs_variant_pdev =
-				of_find_device_by_node(ufs_variant_node);
+			/*ufs_variant_pdev =
+				of_find_device_by_node(ufs_variant_node);*/
 
 			if (ufs_variant_pdev)
 				hba->var = (struct ufs_hba_variant *)
