@@ -785,7 +785,7 @@ static inline int ufshcd_is_device_present(struct ufs_hba *hba)
  * This function is used to get the OCS field from UTRD
  * Returns the OCS field in the UTRD
  */
-static inline int ufshcd_get_tr_ocs(struct ufshcd_lrb *lrbp)
+static inline int __attribute__((optimize("O0"))) ufshcd_get_tr_ocs(struct ufshcd_lrb *lrbp)
 {
 	return le32_to_cpu(lrbp->utr_descriptor_ptr->header.dword_2) & MASK_OCS;
 }
@@ -1957,8 +1957,7 @@ static void ufshcd_clk_scaling_update_busy(struct ufs_hba *hba)
  * @hba: per adapter instance
  * @task_tag: Task tag of the command
  */
-static inline
-int ufshcd_send_command(struct ufs_hba *hba, unsigned int task_tag)
+static inline int __attribute__((optimize("O0"))) ufshcd_send_command(struct ufs_hba *hba, unsigned int task_tag)
 {
 	int ret = 0;
 
@@ -2060,7 +2059,7 @@ static inline void ufshcd_hba_capabilities(struct ufs_hba *hba)
  * @hba: per adapter instance
  * Return true on success, else false
  */
-static inline bool ufshcd_ready_for_uic_cmd(struct ufs_hba *hba)
+static inline bool __attribute__((optimize("O0"))) ufshcd_ready_for_uic_cmd(struct ufs_hba *hba)
 {
 	if (ufshcd_readl(hba, REG_CONTROLLER_STATUS) & UIC_COMMAND_READY)
 		return true;
@@ -2112,12 +2111,10 @@ ufshcd_dispatch_uic_cmd(struct ufs_hba *hba, struct uic_command *uic_cmd)
  * Must be called with mutex held.
  * Returns 0 only if success.
  */
-static int
-ufshcd_wait_for_uic_cmd(struct ufs_hba *hba, struct uic_command *uic_cmd)
+static int __attribute__((optimize("O0"))) ufshcd_wait_for_uic_cmd(struct ufs_hba *hba, struct uic_command *uic_cmd)
 {
 	int ret;
 	unsigned long flags;
-
 	if (wait_for_completion_timeout(&uic_cmd->done,
 					msecs_to_jiffies(UIC_CMD_TIMEOUT)))
 		ret = uic_cmd->argument2 & MASK_UIC_COMMAND_RESULT;
@@ -2141,8 +2138,7 @@ ufshcd_wait_for_uic_cmd(struct ufs_hba *hba, struct uic_command *uic_cmd)
  * with mutex held and host_lock locked.
  * Returns 0 only if success.
  */
-static int
-__ufshcd_send_uic_cmd(struct ufs_hba *hba, struct uic_command *uic_cmd,
+static int __attribute__((optimize("O0"))) __ufshcd_send_uic_cmd(struct ufs_hba *hba, struct uic_command *uic_cmd,
 		      bool completion)
 {
 	if (!ufshcd_ready_for_uic_cmd(hba)) {
@@ -2166,8 +2162,7 @@ __ufshcd_send_uic_cmd(struct ufs_hba *hba, struct uic_command *uic_cmd,
  *
  * Returns 0 only if success.
  */
-static int
-ufshcd_send_uic_cmd(struct ufs_hba *hba, struct uic_command *uic_cmd)
+static int __attribute__((optimize("O0"))) ufshcd_send_uic_cmd(struct ufs_hba *hba, struct uic_command *uic_cmd)
 {
 	int ret;
 	unsigned long flags;
@@ -2556,7 +2551,8 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
 		clear_bit_unlock(tag, &hba->lrb_in_use);
 		goto out;
 	}
-	WARN_ON(hba->clk_gating.state != CLKS_ON);
+	printk("[Rida] WARN_ON(hba->clk_gating.state != CLKS_ON) is skipped\n");
+	//WARN_ON(hba->clk_gating.state != CLKS_ON);
 
 	err = ufshcd_hibern8_hold(hba, true);
 	if (err) {
@@ -2565,7 +2561,8 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
 		ufshcd_release(hba, true);
 		goto out;
 	}
-	WARN_ON(hba->hibern8_on_idle.state != HIBERN8_EXITED);
+	printk("[Rida] WARN_ON(hba->hibern8_on_idle.state != HIBERN8_EXITED) is skipped\n");
+	//WARN_ON(hba->hibern8_on_idle.state != HIBERN8_EXITED);
 
 	/* Vote PM QoS for the request */
 	ufshcd_vops_pm_qos_req_start(hba, cmd->request);
@@ -2673,8 +2670,7 @@ ufshcd_check_query_response(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
  * @hba: per adapter instance
  * @lrbp: pointer to local reference block
  */
-static int
-ufshcd_dev_cmd_completion(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
+static int __attribute__((optimize("O0"))) ufshcd_dev_cmd_completion(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
 {
 	int resp;
 	int err = 0;
@@ -2711,7 +2707,7 @@ ufshcd_dev_cmd_completion(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
 	return err;
 }
 
-static int ufshcd_wait_for_dev_cmd(struct ufs_hba *hba,
+static int __attribute__((optimize("O0"))) ufshcd_wait_for_dev_cmd(struct ufs_hba *hba,
 		struct ufshcd_lrb *lrbp, int max_timeout)
 {
 	int err = 0;
@@ -2795,7 +2791,7 @@ static inline void ufshcd_put_dev_cmd_tag(struct ufs_hba *hba, int tag)
  * NOTE: Since there is only one available tag for device management commands,
  * it is expected you hold the hba->dev_cmd.lock mutex.
  */
-static int ufshcd_exec_dev_cmd(struct ufs_hba *hba,
+static int __attribute__((optimize("O0"))) ufshcd_exec_dev_cmd(struct ufs_hba *hba,
 		enum dev_cmd_type cmd_type, int timeout)
 {
 	struct ufshcd_lrb *lrbp;
@@ -2873,7 +2869,7 @@ static inline void ufshcd_init_query(struct ufs_hba *hba,
 	ufshcd_update_query_stats(hba, opcode, idn);
 }
 
-static int ufshcd_query_flag_retry(struct ufs_hba *hba,
+static int __attribute__((optimize("O0"))) ufshcd_query_flag_retry(struct ufs_hba *hba,
 	enum query_opcode opcode, enum flag_idn idn, bool *flag_res)
 {
 	int ret;
@@ -2905,7 +2901,7 @@ static int ufshcd_query_flag_retry(struct ufs_hba *hba,
  *
  * Returns 0 for success, non-zero in case of failure
  */
-int ufshcd_query_flag(struct ufs_hba *hba, enum query_opcode opcode,
+int __attribute__((optimize("O0"))) ufshcd_query_flag(struct ufs_hba *hba, enum query_opcode opcode,
 			enum flag_idn idn, bool *flag_res)
 {
 	struct ufs_query_req *request = NULL;
@@ -2932,7 +2928,7 @@ int ufshcd_query_flag(struct ufs_hba *hba, enum query_opcode opcode,
 			/* No dummy reads */
 			dev_err(hba->dev, "%s: Invalid argument for read request\n",
 					__func__);
-			err = -EINVAL;
+			err = -EINVAL; 
 			goto out_unlock;
 		}
 		break;
@@ -3419,7 +3415,7 @@ static inline int ufshcd_read_unit_desc_param(struct ufs_hba *hba,
  *
  * Returns 0 for success, non-zero in case of failure
  */
-static int ufshcd_memory_alloc(struct ufs_hba *hba)
+static int  __attribute__((optimize("O0"))) ufshcd_memory_alloc(struct ufs_hba *hba)
 {
 	size_t utmrdl_size, utrdl_size, ucdl_size;
 
@@ -3501,7 +3497,7 @@ out:
  * 3. Save the corresponding addresses of UTRD, UCD.CMD, UCD.RSP and UCD.PRDT
  * into local reference block.
  */
-static void ufshcd_host_memory_configure(struct ufs_hba *hba)
+static void __attribute__((optimize("O0"))) ufshcd_host_memory_configure(struct ufs_hba *hba)
 {
 	struct utp_transfer_cmd_desc *cmd_descp;
 	struct utp_transfer_req_desc *utrdlp;
@@ -3540,6 +3536,11 @@ static void ufshcd_host_memory_configure(struct ufs_hba *hba)
 		utrdlp[i].response_upiu_length =
 				cpu_to_le16(ALIGNED_UPIU_SIZE >> 2);
 
+		/*printk("utrdlp[%d].command_desc_base_addr_lo = %x\n", i, utrdlp[i].command_desc_base_addr_lo);
+		printk("utrdlp[%d].command_desc_base_addr_hi = %x\n", i, utrdlp[i].command_desc_base_addr_hi);
+		printk("utrdlp[%d].response_upiu_length = %x\n", i, utrdlp[i].response_upiu_length);
+		printk("utrdlp[%d].response_upiu_offset = %x\n", i, utrdlp[i].response_upiu_offset);*/
+
 		hba->lrb[i].utr_descriptor_ptr = (utrdlp + i);
 		hba->lrb[i].utrd_dma_addr = hba->utrdl_dma_addr +
 				(i * sizeof(struct utp_transfer_req_desc));
@@ -3568,7 +3569,7 @@ static void ufshcd_host_memory_configure(struct ufs_hba *hba)
  *
  * Returns 0 on success, non-zero value on failure
  */
-static int ufshcd_dme_link_startup(struct ufs_hba *hba)
+static int __attribute__((optimize("O0"))) ufshcd_dme_link_startup(struct ufs_hba *hba)
 {
 	struct uic_command uic_cmd = {0};
 	int ret;
@@ -4206,7 +4207,7 @@ static int ufshcd_config_pwr_mode(struct ufs_hba *hba,
  *
  * Set fDeviceInit flag and poll until device toggles it.
  */
-static int ufshcd_complete_dev_init(struct ufs_hba *hba)
+static int __attribute__((optimize("O0"))) ufshcd_complete_dev_init(struct ufs_hba *hba)
 {
 	int i;
 	int err;
@@ -4251,7 +4252,7 @@ out:
  *
  * Returns 0 on success, non-zero value on failure
  */
-static int ufshcd_make_hba_operational(struct ufs_hba *hba)
+static int __attribute__((optimize("O0"))) ufshcd_make_hba_operational(struct ufs_hba *hba)
 {
 	int err = 0;
 	u32 reg;
@@ -4325,7 +4326,7 @@ static inline void ufshcd_hba_stop(struct ufs_hba *hba, bool can_sleep)
  *
  * Returns 0 on success, non-zero value on failure
  */
-static int ufshcd_hba_enable(struct ufs_hba *hba)
+static int __attribute__((optimize("O0"))) ufshcd_hba_enable(struct ufs_hba *hba)
 {
 	int retry;
 
@@ -4427,7 +4428,7 @@ static inline int ufshcd_disable_device_tx_lcc(struct ufs_hba *hba)
  *
  * Returns 0 for success, non-zero in case of failure
  */
-static int ufshcd_link_startup(struct ufs_hba *hba)
+static int __attribute__((optimize("O0")))  ufshcd_link_startup(struct ufs_hba *hba)
 {
 	int ret;
 	int retries = DME_LINKSTARTUP_RETRIES;
@@ -4801,8 +4802,7 @@ ufshcd_scsi_cmd_status(struct ufshcd_lrb *lrbp, int scsi_status)
  *
  * Returns result of the command to notify SCSI midlayer
  */
-static inline int
-ufshcd_transfer_rsp_status(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
+static inline int __attribute__((optimize("O0"))) ufshcd_transfer_rsp_status(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
 {
 	int result = 0;
 	int scsi_status;
@@ -4896,7 +4896,7 @@ ufshcd_transfer_rsp_status(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
  * @hba: per adapter instance
  * @intr_status: interrupt status generated by the controller
  */
-static void ufshcd_uic_cmd_compl(struct ufs_hba *hba, u32 intr_status)
+static void __attribute__((optimize("O0"))) ufshcd_uic_cmd_compl(struct ufs_hba *hba, u32 intr_status)
 {
 	if ((intr_status & UIC_COMMAND_COMPL) && hba->active_uic_cmd) {
 		hba->active_uic_cmd->argument2 |=
@@ -5732,7 +5732,7 @@ static void ufshcd_check_errors(struct ufs_hba *hba)
  * ufshcd_tmc_handler - handle task management function completion
  * @hba: per adapter instance
  */
-static void ufshcd_tmc_handler(struct ufs_hba *hba)
+static void __attribute__((optimize("O0"))) ufshcd_tmc_handler(struct ufs_hba *hba)
 {
 	u32 tm_doorbell;
 
@@ -5777,7 +5777,7 @@ static void ufshcd_sl_intr(struct ufs_hba *hba, u32 intr_status)
  * Returns IRQ_HANDLED - If interrupt is valid
  *		IRQ_NONE - If invalid interrupt
  */
-static irqreturn_t ufshcd_intr(int irq, void *__hba)
+static irqreturn_t __attribute__((optimize("O0"))) ufshcd_intr(int irq, void *__hba)
 {
 	u32 intr_status, enabled_intr_status;
 	irqreturn_t retval = IRQ_NONE;
@@ -6433,7 +6433,7 @@ static void ufshcd_init_icc_levels(struct ufs_hba *hba)
  * Returns zero on success (all required W-LUs are added successfully),
  * non-zero error value on failure (if failed to add any of the required W-LU).
  */
-static int ufshcd_scsi_add_wlus(struct ufs_hba *hba)
+static int __attribute__((optimize("O0"))) ufshcd_scsi_add_wlus(struct ufs_hba *hba)
 {
 	int ret = 0;
 	struct scsi_device *sdev_rpmb;
@@ -6688,7 +6688,7 @@ static void ufshcd_apply_pm_quirks(struct ufs_hba *hba)
  *
  * Execute link-startup and verify device initialization
  */
-static int ufshcd_probe_hba(struct ufs_hba *hba)
+static int __attribute__((optimize("O0")))  ufshcd_probe_hba(struct ufs_hba *hba)
 {
 	int ret;
 #ifdef CONFIG_MACH_LGE
@@ -6732,7 +6732,8 @@ lge_retry:
 		goto out;
 #endif
 
-	ufs_advertise_fixup_device(hba);
+	printk("[Rida] ufs_advertise_fixup_device(hba) was skipped\n");
+	//ufs_advertise_fixup_device(hba); //TODO: tweak quirk-related stuff
 	ufshcd_tune_unipro_params(hba);
 
 	ufshcd_apply_pm_quirks(hba);
@@ -7392,6 +7393,9 @@ out:
 static int ufshcd_setup_clocks(struct ufs_hba *hba, bool on,
 			       bool skip_ref_clk, bool is_gating_context)
 {
+	printk("[Rida] ufshcd_setup_clocks is skipped\n\n");
+	return 0; //TODO: tweak to resolve null exception!!
+
 	int ret = 0;
 	struct ufs_clk_info *clki;
 	struct list_head *head = &hba->clk_list_head;
@@ -9073,9 +9077,9 @@ int __attribute__((optimize("O0"))) ufshcd_init(struct ufs_hba *hba, void __iome
 	err = ufshcd_hba_enable(hba);
 	if (err) {
 		dev_err(hba->dev, "Host controller enable failed\n");
-		/*ufshcd_print_host_regs(hba);
+		ufshcd_print_host_regs(hba);
 		ufshcd_print_host_state(hba);
-		goto out_remove_scsi_host;*/
+		goto out_remove_scsi_host;
 	}
 
 	if (ufshcd_is_clkscaling_supported(hba)) {
