@@ -71,6 +71,7 @@
 #include "scsi_priv.h"
 #include "scsi_logging.h"
 
+#define CONFIG_MACH_LGE //enabled here to fix a syntax error ---- it should be enabled in the configuration file
 MODULE_AUTHOR("Eric Youngdale");
 MODULE_DESCRIPTION("SCSI disk (sd) driver");
 MODULE_LICENSE("GPL");

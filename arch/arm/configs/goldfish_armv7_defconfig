@@ -1048,7 +1048,8 @@ CONFIG_SCSI_MQ_DEFAULT=y
 #
 # SCSI support type (disk, tape, CD-ROM)
 #
-# CONFIG_BLK_DEV_SD is not set
+####### enabled to let the kernel create an entry for it under /dev/block/sd'X' ########
+CONFIG_BLK_DEV_SD=y
 # CONFIG_CHR_DEV_ST is not set
 # CONFIG_CHR_DEV_OSST is not set
 # CONFIG_BLK_DEV_SR is not set
@@ -1074,7 +1075,8 @@ CONFIG_SCSI_UFSHCD=y
 CONFIG_SCSI_UFSHCD_PLATFORM=y
 CONFIG_SCSI_UFS_QCOM=y
 CONFIG_SCSI_UFS_QCOM_ICE=y
-CONFIG_UFS_LGE_FEATURE=y
+########### disabling CONFIG_UFS_LGE_FEATURE results in in valid ramdisk issue ##########
+CONFIG_UFS_LGE_FEATURE=n
 # CONFIG_SCSI_UFS_TEST is not set
 # CONFIG_SCSI_DEBUG is not set
 # CONFIG_SCSI_DH is not set
