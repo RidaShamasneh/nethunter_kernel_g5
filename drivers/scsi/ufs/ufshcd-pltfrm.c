@@ -336,8 +336,8 @@ static int __attribute__((optimize("O0"))) ufshcd_pltfrm_probe(struct platform_d
 		if (!ufs_variant_node) {
 			dev_dbg(&pdev->dev, "no ufs_variant_node found\n");
 		} else {
-			/*ufs_variant_pdev =
-				of_find_device_by_node(ufs_variant_node);*/
+			ufs_variant_pdev =
+				of_find_device_by_node(ufs_variant_node);
 
 			if (ufs_variant_pdev)
 				hba->var = (struct ufs_hba_variant *)
