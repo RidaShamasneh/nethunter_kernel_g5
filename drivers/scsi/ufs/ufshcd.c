@@ -2551,7 +2551,7 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
 		clear_bit_unlock(tag, &hba->lrb_in_use);
 		goto out;
 	}
-	printk("[Rida] WARN_ON(hba->clk_gating.state != CLKS_ON) is skipped\n");
+	//printk("[Rida] WARN_ON(hba->clk_gating.state != CLKS_ON) is skipped\n");
 	//WARN_ON(hba->clk_gating.state != CLKS_ON);
 
 	err = ufshcd_hibern8_hold(hba, true);
@@ -2561,7 +2561,7 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
 		ufshcd_release(hba, true);
 		goto out;
 	}
-	printk("[Rida] WARN_ON(hba->hibern8_on_idle.state != HIBERN8_EXITED) is skipped\n");
+	//printk("[Rida] WARN_ON(hba->hibern8_on_idle.state != HIBERN8_EXITED) is skipped\n");
 	//WARN_ON(hba->hibern8_on_idle.state != HIBERN8_EXITED);
 
 	/* Vote PM QoS for the request */
