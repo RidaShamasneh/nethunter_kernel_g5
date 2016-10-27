@@ -7992,7 +7992,7 @@ disable_clks:
 	 * Disable the host irq as host controller as there won't be any
 	 * host controller transaction expected till resume.
 	 */
-	ufshcd_disable_irq(hba);
+	//ufshcd_disable_irq(hba); //tweak: [Rida] This needs to be fixed!!!!
 	/* Put the host controller in low power mode if possible */
 	ufshcd_hba_vreg_set_lpm(hba);
 	goto out;
