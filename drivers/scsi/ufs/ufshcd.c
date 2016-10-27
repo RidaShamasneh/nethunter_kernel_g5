@@ -405,6 +405,9 @@ static inline void ufshcd_enable_irq(struct ufs_hba *hba)
 
 static inline void ufshcd_disable_irq(struct ufs_hba *hba)
 {
+	printk("[Rida] ERROR!!! ufshcd_disable_irq was called!! QEMU will no longer be able to send irqs to ufshcd.c!\n");
+	printk("TODO fix later\n");
+	WARN_ON(true);
 	if (hba->is_irq_enabled) {
 		disable_irq(hba->irq);
 		hba->is_irq_enabled = false;
