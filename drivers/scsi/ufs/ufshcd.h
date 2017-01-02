@@ -928,21 +928,19 @@ static inline bool ufshcd_keep_autobkops_enabled_except_suspend(
 
 static inline bool ufshcd_is_intr_aggr_allowed(struct ufs_hba *hba)
 {
-	//TODO: check later!! why hba->caps is used in the condition even though its zero all the time_after
-	//I think hba->capabilities must be used instead::
-	//printk("hba->caps = %.8X , hba->capabilities = %.8X, UFSHCD_CAP_INTR_AGGR = %.8x \n", hba->caps, hba->capabilities, UFSHCD_CAP_INTR_AGGR);
+	//TODO: Check why hba->caps is used in the condition even though its zero all the time_after
+	/*printk("hba->caps = %.8X , hba->capabilities = %.8X, UFSHCD_CAP_INTR_AGGR = %.8x , hba->quirks = %.8x , UFSHCD_QUIRK_BROKEN_INTR_AGGR = %.8x\n", 
+	hba->caps, hba->capabilities, UFSHCD_CAP_INTR_AGGR, hba->quirks, UFSHCD_QUIRK_BROKEN_INTR_AGGR);
 	
-	if ((/*hba->caps*/ hba->capabilities & UFSHCD_CAP_INTR_AGGR) && //TODO: very strange!
+	printk("hba->caps & UFSHCD_CAP_INTR_AGGR = %.8x \n", hba->caps & UFSHCD_CAP_INTR_AGGR);
+	printk("hba->quirks & UFSHCD_QUIRK_BROKEN_INTR_AGGR = %.8x \n", hba->quirks & UFSHCD_QUIRK_BROKEN_INTR_AGGR);
+	printk("!(hba->quirks & UFSHCD_QUIRK_BROKEN_INTR_AGGR) = %.8x \n", !(hba->quirks & UFSHCD_QUIRK_BROKEN_INTR_AGGR));*/
+	
+	if ((hba->caps & UFSHCD_CAP_INTR_AGGR) &&
 	    !(hba->quirks & UFSHCD_QUIRK_BROKEN_INTR_AGGR))
-		//{
-		//printk("ufshcd_is_intr_aggr_allowed true\n");
 		return true;
-		//}
 	else
-		//{
-		//printk("ufshcd_is_intr_aggr_allowed false\n");
 		return false;
-		//}
 }
 
 #define ufshcd_writel(hba, val, reg)	\
