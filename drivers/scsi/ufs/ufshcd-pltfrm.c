@@ -268,14 +268,17 @@ static int ufshcd_pltfrm_resume(struct device *dev)
 #ifdef CONFIG_PM_RUNTIME
 static int ufshcd_pltfrm_runtime_suspend(struct device *dev)
 {
+	printk("[Rida] ufshcd_pltfrm_runtime_suspend in ufshcd-pltfrm.c\n");
 	return ufshcd_runtime_suspend(dev_get_drvdata(dev));
 }
 static int ufshcd_pltfrm_runtime_resume(struct device *dev)
 {
+	printk("[Rida] ufshcd_pltfrm_runtime_resume in ufshcd-pltfrm.c\n");
 	return ufshcd_runtime_resume(dev_get_drvdata(dev));
 }
 static int ufshcd_pltfrm_runtime_idle(struct device *dev)
 {
+	printk("[Rida] ufshcd_pltfrm_runtime_idle in ufshcd-pltfrm.c\n");
 	return ufshcd_runtime_idle(dev_get_drvdata(dev));
 }
 #else /* !CONFIG_PM_RUNTIME */
@@ -403,11 +406,19 @@ static const struct of_device_id ufs_of_match[] = {
 };
 
 static const struct dev_pm_ops ufshcd_dev_pm_ops = {
+	//TODO: Revert the original code later
+	/*
 	.suspend	= ufshcd_pltfrm_suspend,
 	.resume		= ufshcd_pltfrm_resume,
 	.runtime_suspend = ufshcd_pltfrm_runtime_suspend,
 	.runtime_resume  = ufshcd_pltfrm_runtime_resume,
 	.runtime_idle    = ufshcd_pltfrm_runtime_idle,
+	*/
+	.suspend	= NULL,
+	.resume		= NULL,
+	.runtime_suspend = NULL,
+	.runtime_resume  = NULL,
+	.runtime_idle    = NULL,
 };
 
 static struct platform_driver ufshcd_pltfrm_driver = {
