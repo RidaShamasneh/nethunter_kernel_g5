@@ -4264,9 +4264,16 @@ static int __attribute__((optimize("O0"))) ufshcd_make_hba_operational(struct uf
 	/* Enable required interrupts */
 	ufshcd_enable_intr(hba, UFSHCD_ENABLE_INTRS);
 
+	//TODO: check how to interface hba->caps with QEMU code
+	//For more information: check a comment I added inside ufshcd_is_intr_aggr_allowed(..) API
+	hba->caps |= UFSHCD_CAP_INTR_AGGR;	
+	
 	/* Configure interrupt aggregation */
 	if (ufshcd_is_intr_aggr_allowed(hba))
+	{
+		printk("calling ufshcd_config_intr_aggr (cnt =  %d, TO = %d)\n", hba->nutrs - 1, INT_AGGR_DEF_TO);
 		ufshcd_config_intr_aggr(hba, hba->nutrs - 1, INT_AGGR_DEF_TO);
+	}
 	else
 		ufshcd_disable_intr_aggr(hba);
 
@@ -7398,6 +7405,7 @@ static int ufshcd_setup_clocks(struct ufs_hba *hba, bool on,
 			       bool skip_ref_clk, bool is_gating_context)
 {
 	printk("[Rida] ufshcd_setup_clocks is skipped\n\n");
+	WARN_ON(true);
 	return 0; //TODO: tweak to resolve null exception!!
 
 	int ret = 0;
@@ -7476,18 +7484,21 @@ out:
 
 static int ufshcd_enable_clocks(struct ufs_hba *hba)
 {
+	printk("ufshcd_enable_clocks \n");
 	return  ufshcd_setup_clocks(hba, true, false, false);
 }
 
 static int ufshcd_disable_clocks(struct ufs_hba *hba,
 				 bool is_gating_context)
 {
+	printk("ufshcd_disable_clocks \n");
 	return  ufshcd_setup_clocks(hba, false, false, is_gating_context);
 }
 
 static int ufshcd_disable_clocks_skip_ref_clk(struct ufs_hba *hba,
 					      bool is_gating_context)
 {
+	printk("ufshcd_disable_clocks_skip_ref_clk\n");
 	return  ufshcd_setup_clocks(hba, false, true, is_gating_context);
 }
 
@@ -7887,6 +7898,7 @@ static void ufshcd_hba_vreg_set_hpm(struct ufs_hba *hba)
  */
 static int ufshcd_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
 {
+	printk("ufshcd_suspend\n");
 	int ret = 0;
 	enum ufs_pm_level pm_lvl;
 	enum ufs_dev_pwr_mode req_dev_pwr_mode;
@@ -8222,6 +8234,8 @@ EXPORT_SYMBOL(ufshcd_system_resume);
  */
 int ufshcd_runtime_suspend(struct ufs_hba *hba)
 {
+	printk("ufshcd_runtime_suspend\n");
+		
 	int ret = 0;
 	ktime_t start = ktime_get();
 
