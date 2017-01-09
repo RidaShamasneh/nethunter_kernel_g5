@@ -4264,9 +4264,15 @@ static int __attribute__((optimize("O0"))) ufshcd_make_hba_operational(struct uf
 	/* Enable required interrupts */
 	ufshcd_enable_intr(hba, UFSHCD_ENABLE_INTRS);
 
-	//TODO: check how to interface hba->caps with QEMU code
-	//For more information: check a comment I added inside ufshcd_is_intr_aggr_allowed(..) API
-	hba->caps |= UFSHCD_CAP_INTR_AGGR;	
+	/*
+		TODO: Review the interface if hba->caps with hardware ufshcd on QEMU code
+		or more information: check a comment I added inside ufshcd_is_intr_aggr_allowed(..) API
+	*/
+	//Vendor-Specific register to control the host capabilities (e.g. interrupt aggregation)
+	#define  REG_VENDOR_SPECIFIC_HOST_CAPABILITIES 0xC0
+	uint32_t vendorSpecificHostCaps = ufshcd_readl(hba, REG_VENDOR_SPECIFIC_HOST_CAPABILITIES);
+	printk("REG_VENDOR_SPECIFIC_HOST_CAPABILITIES = %.8X\n", vendorSpecificHostCaps);
+	hba->caps |= vendorSpecificHostCaps;
 	
 	/* Configure interrupt aggregation */
 	if (ufshcd_is_intr_aggr_allowed(hba))
